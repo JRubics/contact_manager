@@ -51,7 +51,7 @@ describe 'the person view', type: :feature do
     old_number = phone.number
 
     first(:link, 'delete').click    
-    expect(current_path).to eq(phone_numbers_path)
+    expect(current_path).to eq(person_path(person))
     # expect(page).to have_content('555-9191')
     # expect(page).to_not have_content(old_number)
   end
