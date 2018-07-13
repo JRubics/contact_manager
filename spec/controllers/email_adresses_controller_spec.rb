@@ -74,6 +74,8 @@ RSpec.describe EmailAdressesController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
+      let(:alice) { Person.create(first_name: 'Alice', last_name: 'Smith') }
+      let(:valid_attributes) { {adress: 'k@k.com', person_id: alice.id} }
       it "creates a new EmailAdress" do
         expect {
           post :create, params: {email_adress: valid_attributes}, session: valid_session
@@ -82,7 +84,7 @@ RSpec.describe EmailAdressesController, type: :controller do
 
       it "redirects to the created email_adress" do
         post :create, params: {email_adress: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(EmailAdress.last)
+        expect(response).to redirect_to(alice)
       end
     end
 
@@ -96,20 +98,22 @@ RSpec.describe EmailAdressesController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
-      let(:new_attributes) { {adress: 'b@b.com', person_id: 1} }
+      let(:bob) { Person.create(first_name: 'Bob', last_name: 'Jones') }
+      let(:valid_attributes) { {adress: 'a@a.com', person_id: bob.id} }
+      let(:new_attributes) { {adress: 'l@k.com', person_id: bob.id} }      
 
       it "updates the requested email_adress" do
         email_adress = EmailAdress.create! valid_attributes
         put :update, params: {id: email_adress.to_param, email_adress: new_attributes}, session: valid_session
         email_adress.reload
-        expect(email_adress.adress).to eq('b@b.com')
-        expect(email_adress.person_id).to eq(1)
+        expect(email_adress.adress).to eq('l@k.com')
+        expect(email_adress.person_id).to eq(bob.id)
       end
 
       it "redirects to the email_adress" do
         email_adress = EmailAdress.create! valid_attributes
         put :update, params: {id: email_adress.to_param, email_adress: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(email_adress)
+        expect(response).to redirect_to(bob)
       end
     end
 
@@ -131,9 +135,11 @@ RSpec.describe EmailAdressesController, type: :controller do
     end
 
     it "redirects to the email_adresses list" do
+      bob = Person.create(first_name: 'Bob', last_name: 'Jones')
+      valid_attributes = {adress: 'd@d.d', person_id: bob.id}
       email_adress = EmailAdress.create! valid_attributes
       delete :destroy, params: {id: email_adress.to_param}, session: valid_session
-      expect(response).to redirect_to(email_adresses_url)
+      expect(response).to redirect_to(bob)      
     end
   end
 

@@ -14,7 +14,7 @@ class EmailAdressesController < ApplicationController
 
   # GET /email_adresses/new
   def new
-    @email_adress = EmailAdress.new
+    @email_adress = EmailAdress.new(person_id: params[:person_id])
   end
 
   # GET /email_adresses/1/edit
@@ -28,13 +28,13 @@ class EmailAdressesController < ApplicationController
 
     respond_to do |format|
       if @email_adress.save
-        format.html { redirect_to @email_adress, notice: 'Email adress was successfully created.' }
+        format.html { redirect_to @email_adress.person, notice: 'Email adress was successfully created.' }
         format.json { render :show, status: :created, location: @email_adress }
       else
         format.html { render :new }
         format.json { render json: @email_adress.errors, status: :unprocessable_entity }
       end
-    end
+    end    
   end
 
   # PATCH/PUT /email_adresses/1
@@ -42,7 +42,7 @@ class EmailAdressesController < ApplicationController
   def update
     respond_to do |format|
       if @email_adress.update(email_adress_params)
-        format.html { redirect_to @email_adress, notice: 'Email adress was successfully updated.' }
+        format.html { redirect_to @email_adress.person, notice: 'Email adress was successfully updated.' }
         format.json { render :show, status: :ok, location: @email_adress }
       else
         format.html { render :edit }
@@ -54,9 +54,10 @@ class EmailAdressesController < ApplicationController
   # DELETE /email_adresses/1
   # DELETE /email_adresses/1.json
   def destroy
+    i = @email_adress.person_id.clone
     @email_adress.destroy
     respond_to do |format|
-      format.html { redirect_to email_adresses_url, notice: 'Email adress was successfully destroyed.' }
+      format.html { redirect_to people_url+"/"+i.to_s, notice: 'Email adress was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
